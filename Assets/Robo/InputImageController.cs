@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Assets.General.NetworkMessage;
 
 public class InputImageController : MonoBehaviour {
 
@@ -14,11 +15,11 @@ public class InputImageController : MonoBehaviour {
 		if (messages.Count > 0) {
 			var ms = messages.Dequeue();
 
-			var message = Message.Deserialize (ms);
+			var message = NetworkMessage.Deserialize (ms);
 
-			if (message is VideoMessage) {
+			if (message is VideoNetworkMessage) {
 				
-				var videoMessage = message as VideoMessage;
+				var videoMessage = message as VideoNetworkMessage;
 
 				var tex2 = videoMessage.texture;
 

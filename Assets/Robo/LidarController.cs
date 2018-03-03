@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class LidarController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 	public float SendRay()
 	{
 		Transform transform = GetComponent<Transform>();

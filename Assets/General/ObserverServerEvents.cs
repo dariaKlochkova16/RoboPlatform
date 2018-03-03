@@ -1,23 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using Assets.General;
 
 public class ObserverServerEvents
 {
-	public event EventHandler RecievedMessage;
-
+	public event EventHandler<MessageEventArgs> RecievedMessage;
 	public IPEndPoint ipEndPoint;
-
 	private ConnectionOptions connectionOptions;
 
 	public ObserverServerEvents(ConnectionOptions _connectionOptions)
 	{
 		connectionOptions = _connectionOptions;
-
 		ipEndPoint = new IPEndPoint (connectionOptions.IpAddress, connectionOptions.RemotePort);
 	}
 
@@ -45,12 +40,12 @@ public class ObserverServerEvents
 					RecievedMessage (this, eventArgs);
 				}
 			}
+
 		} catch (ArgumentOutOfRangeException ex) {
 			Debug.Log ("Некорректный номер порта");
 		} catch (SocketException ex) {
 			Debug.Log ("Порт уже используется");
 		}
-
 	}
 }
 
