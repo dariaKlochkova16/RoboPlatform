@@ -6,8 +6,11 @@ namespace Assets.MobileApplicatiom
 {
     class UIController : MonoBehaviour
     {
-        private IView view;
-        private IModel model;
+        //private IView view;
+        //private IModel model;
+
+        public UIView view;
+        public RoboModel model;
 
         public void Start()
         {
@@ -19,22 +22,16 @@ namespace Assets.MobileApplicatiom
             switch(e.message.MessageId)
             {
                 case "forward":
-                    model.Move(MotionType.Backward, 1);
+                    model.Move(MotionDirection.Backward, 1);
                     break;
                 case "backward":
-                    model.Move(MotionType.Backward, 1);
+                    model.Move(MotionDirection.Backward, 1);
                     break;
                 case "left":
-                    model.Move(MotionType.Left, 1);
+                    model.Move(MotionDirection.Left, 1);
                     break;
                 case "right":
-                    model.Move(MotionType.Right, 1);
-                    break;
-                case "lidar":
-                    model.SetCurrentImageType(ImageType.Map);
-                    break;
-                case "camera":
-                    model.SetCurrentImageType(ImageType.CameraImage);
+                    model.Move(MotionDirection.Right, 1);
                     break;
                 default:
                     break;

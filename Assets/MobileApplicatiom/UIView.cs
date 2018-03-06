@@ -7,8 +7,10 @@ using UnityEngine.UI;
 public class UIView : MonoBehaviour, IView
 {
     public event EventHandler<UIMessageEventArgs> UserInputEvent;
-    private IModel model;
-    public Image image;
+    //private IModel model;
+    public RoboModel model;
+    public Image imageCamera;
+    public Image imageMap;
     public int scale = 20;
 
     public void Start()
@@ -19,15 +21,24 @@ public class UIView : MonoBehaviour, IView
 
     private void DrawMapImage(object sender, MapMessageEventArgs e)
     {
-        CreateMapTexture(e.map);
+        var texture = CreateMapTexture(e.map);
+
+        var rectangular = new Rect(0.0f, 0.0f, texture.width, texture.height);
+        var pivot = new Vector2(0.5f, 0.5f);
+
+        Sprite mySprite = Sprite.Create(texture, rectangular, pivot);
+        imageMap.sprite = mySprite;
     }
 
-    private void ButtonClick(string buttonID)
+    public void ButtonClick(string buttonID)
     {
-        UIMessageEventArgs eventArgs = new UIMessageEventArgs();
-        eventArgs.message = new UIMessage(buttonID);
+        if (UserInputEvent != null)
+        {
+            UIMessageEventArgs eventArgs = new UIMessageEventArgs();
+            eventArgs.message = new UIMessage(buttonID);
 
-        UserInputEvent(this, eventArgs);
+            UserInputEvent(this, eventArgs);
+        }
     }
 
     public void DrawVideoImage(object sender, VideoMessageEventArgs e)
@@ -37,14 +48,14 @@ public class UIView : MonoBehaviour, IView
         var pivot = new Vector2(0.5f, 0.5f);
 
         Sprite mySprite = Sprite.Create(texture, rectangular, pivot);
-        image.sprite = mySprite;
+        imageCamera.sprite = mySprite;
     }
 
     public Texture2D CreateMapTexture(Map _map)
     {
         //TODO 
-        int width = (int)image.flexibleWidth;
-        int hight = (int)image.flexibleHeight;
+        int width = (int)imageCamera.flexibleWidth;
+        int hight = (int)imageCamera.flexibleHeight;
         float Y;
         float X;
 

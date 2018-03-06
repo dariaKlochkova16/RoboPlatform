@@ -23,4 +23,10 @@ namespace Assets.General
     {
         public UIMessage message;
     }
+
+    public class MotionEventArgs : EventArgs
+    {
+        public MotionDirection motionType;
+        public float distance;
+    }
 }

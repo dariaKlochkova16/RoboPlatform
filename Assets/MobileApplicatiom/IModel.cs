@@ -9,8 +9,6 @@ namespace Assets.MobileApplicatiom
         event EventHandler<VideoMessageEventArgs> ModelVideoStateChangedEvent;
         event EventHandler<MapMessageEventArgs> ModelMapStateChangedEvent;
 
-        void SetCurrentImageType(ImageType imageType);
-
-        void Move(MotionType motion, float distance);
+        void Move(MotionDirection motion, float distance);
     }
 }

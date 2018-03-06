@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Assets.MobileApplicatiom
 {
-    class RoboModel : MonoBehaviour, IModel
+    public class RoboModel : MonoBehaviour, IModel
     {
         public event EventHandler<VideoMessageEventArgs> ModelVideoStateChangedEvent;
         public event EventHandler<MapMessageEventArgs> ModelMapStateChangedEvent;
@@ -15,7 +15,8 @@ namespace Assets.MobileApplicatiom
 
         public void Start()
         {
-            ConnectionMenager.RecievedMessage += RecieveMessage;
+            ConnectionManager.Instanse.SetConnectionOptions(6007, 6006);
+            ConnectionManager.Instanse.RecievedMessage += RecieveMessage;
         }
 
         public void Update()
@@ -28,52 +29,57 @@ namespace Assets.MobileApplicatiom
             messages.Enqueue(NetworkMessage.Deserialize(e.message));
         }
 
+        public void OnDestroy()
+        {
+            ConnectionManager.Instanse.RecievedMessage -= RecieveMessage;
+            ConnectionManager.Instanse.Terminate();
+        }
+
         private void ProcessQueue()
         {
-            var message = messages.Dequeue();
+            if (messages.Count > 0)
+            {
+                var message = messages.Dequeue();
 
-            if (message is VideoNetworkMessage)
-                RecieveVideoMessage(message as VideoNetworkMessage);
+                if (message is VideoNetworkMessage)
+                    RecieveVideoMessage(message as VideoNetworkMessage);
 
-            if (message is MapNetworkMessage)
-                RecieveMapMessage(message as MapNetworkMessage);
+                if (message is MapNetworkMessage)
+                    RecieveMapMessage(message as MapNetworkMessage);
+            }
         }
 
         private void RecieveVideoMessage(VideoNetworkMessage videoNetworkMessage)
         {
-            //TODO
             var texture = new Texture2D(0, 0);
 
             texture.LoadImage(videoNetworkMessage.texture);
             texture.Apply();
 
-            var eventArgs = new VideoMessageEventArgs();
-            eventArgs.message = texture;
+            if (ModelVideoStateChangedEvent != null)
+            {
+                var eventArgs = new VideoMessageEventArgs();
+                eventArgs.message = texture;
 
-            ModelVideoStateChangedEvent(this, eventArgs);
+                ModelVideoStateChangedEvent(this, eventArgs);
+            }
         }
 
         private void RecieveMapMessage(MapNetworkMessage mapNetworkMessage)
         {
-            var eventArgs = new MapMessageEventArgs();
-            eventArgs.map = mapNetworkMessage.map;
+            if (ModelMapStateChangedEvent != null)
+            {
+                var eventArgs = new MapMessageEventArgs();
+                eventArgs.map = mapNetworkMessage.map;
 
-            ModelMapStateChangedEvent(this, eventArgs);
+                ModelMapStateChangedEvent(this, eventArgs);
+            }
         }
 
-        public void Move(MotionType motion, float distance)
+        public void Move(MotionDirection motion, float distance)
         {
-            //TODO distance
-            var message = new MotionNetworkMessage(motion);
-            ConnectionMenager.Instanse.Send(message.Serialize());
-        }
-
-        public void SetCurrentImageType(ImageType imageType)
-        {
-            var message = new ChangeTypeImageNetworkMessage();
-            message.imageType = imageType;
-
-            ConnectionMenager.Instanse.Send(message.Serialize());
+            var message = new MotionNetworkMessage(motion, distance);
+            ConnectionManager.Instanse.Send(message.Serialize());
         }
     }
 }

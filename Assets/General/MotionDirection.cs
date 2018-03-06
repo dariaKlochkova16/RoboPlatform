@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Assets.General
 {
-    public enum MotionType
+    public enum MotionDirection
     {
         Forward,
         Backward,

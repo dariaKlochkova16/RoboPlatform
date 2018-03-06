@@ -5,11 +5,13 @@ namespace Assets.General.NetworkMessage
     [Serializable]
     public class MotionNetworkMessage : NetworkMessage
     {
-        public MotionType MotionType;
+        public MotionDirection MotionType;
+        public float Distance;
 
-        public MotionNetworkMessage(MotionType motionType)
+        public MotionNetworkMessage(MotionDirection motionType, float distance)
         {
             MotionType = motionType;
+            Distance = distance;
         }
     }
 }
